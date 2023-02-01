@@ -1,1 +1,8 @@
 *.pyc
+results*
+*.d
+*.bak
+*.pcm
+*.so
+libPython/build*
+etc/config/Back*

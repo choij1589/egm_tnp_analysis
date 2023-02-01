@@ -19,7 +19,6 @@ RooAbsPdf(name,title),
   n(" n"," n",this,_n),
   sigma_2(" sigma_2"," sigma_2",this,_sigma_2),
   tailLeft(  " tailL"," tailL",this,_tailLeft)
-
 {}
 
 RooCBExGaussShape::RooCBExGaussShape(const RooCBExGaussShape& other, const char* name):
@@ -31,7 +30,6 @@ RooCBExGaussShape::RooCBExGaussShape(const RooCBExGaussShape& other, const char*
   n(" n",this,other. n),
   sigma_2(" sigma_2",this,other. sigma_2),
   tailLeft(" tailL",this,other.tailLeft)
-
 {}
 
 
@@ -41,10 +39,7 @@ Double_t RooCBExGaussShape::evaluate() const
 
   Double_t t = (m-m0)/sigma;
   Double_t t0 = (m-m0)/sigma_2;
-  // if (alpha < 0){ 
-  //   t = -t;
-  //   t0 = -t0;
-  // }
+  // if (alpha < 0){ t = -t; t0 = -t0; }
 
   Double_t absAlpha = fabs((Double_t)alpha);
   if( tailLeft >= 0 ) {
@@ -55,9 +50,9 @@ Double_t RooCBExGaussShape::evaluate() const
       rval= exp(-0.5*t*t);
     }
     else {
-      //      Double_t a =  TMath::Power(n/absAlpha,n)*exp(-0.5*absAlpha*absAlpha);
-      //      Double_t b= n/absAlpha - absAlpha; 
-      //      rval= a/TMath::Power(b - t, n);
+      //Double_t a =  TMath::Power(n/absAlpha,n)*exp(-0.5*absAlpha*absAlpha);
+      //Double_t b= n/absAlpha - absAlpha; 
+      //rval= a/TMath::Power(b - t, n);
       Double_t a = exp(-0.5*absAlpha*absAlpha);
       Double_t b = exp(n*(t+absAlpha));
       rval = a*b;
@@ -76,7 +71,6 @@ Double_t RooCBExGaussShape::evaluate() const
       Double_t b= absN/absAlpha - absAlpha;
       rval= a/TMath::Power(b + t0, absN);
     }
-
   }
 
   return rval;

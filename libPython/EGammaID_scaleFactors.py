@@ -103,7 +103,8 @@ def EffiGraph1D(effDataList, effMCList, sfList ,nameout, xAxis = 'pT', yAxis = '
     p1.SetLeftMargin( c.GetLeftMargin() )
     p2.SetLeftMargin( c.GetLeftMargin() )
     firstGraph = True
-    leg = rt.TLegend(0.5,0.80,0.95 ,0.92)
+###    leg = rt.TLegend(0.5,0.80,0.95 ,0.92)
+    leg = rt.TLegend(0.65,0.50,0.95 ,0.62)
     leg.SetFillColor(0)
     leg.SetBorderSize(0)
 
@@ -130,13 +131,16 @@ def EffiGraph1D(effDataList, effMCList, sfList ,nameout, xAxis = 'pT', yAxis = '
         xMin = 0.0
 
     effminmax =  findMinMax( effDataList )
-    effiMin = effminmax[0]
-    effiMax = effminmax[1]
+###    effiMin = effminmax[0]
+###    effiMax = effminmax[1]
+    effiMin = -0.05
+    effiMax = 1.15
 
-    sfminmax =  findMinMax( sfList )
-    sfMin = sfminmax[0]
-#    sfMin = 0.94
-#    sfMax = 1.02
+
+###    sfminmax =  findMinMax( sfList )
+###    sfMin = sfminmax[0]
+    sfMin = 0.78
+    sfMax = 1.12
 
     for key in sorted(effDataList.keys()):
         grBinsEffData = effUtil.makeTGraphFromList(effDataList[key], 'min', 'max')
@@ -391,12 +395,26 @@ def doEGM_SFs(filein, lumi, axis = ['pT','eta'] ):
     h2SF.Write('EGamma_SF2D',rt.TObject.kOverwrite)
     h2EffData.Write('EGamma_EffData2D',rt.TObject.kOverwrite)
     h2EffMC  .Write('EGamma_EffMC2D'  ,rt.TObject.kOverwrite)
+    h2Error  .Write('EGamma_Err2D'    ,rt.TObject.kOverwrite)
     for igr in range(len(listOfSF1D)):
         listOfSF1D[igr].Write( 'grSF1D_%d' % igr, rt.TObject.kOverwrite)
-    rootout.Close()
+#    rootout.Close()
 
+    errorNames = efficiency.getSystematicNames()
     for isyst in range(len(efficiency.getSystematicNames())):
         diagnosticErrorPlot( effGraph, isyst, pdfout )
+        h2Save_sfErrorAbs = effGraph.ptEtaScaleFactor_2DHisto(isyst+1, False )
+        h2Save_sfErrorRel = effGraph.ptEtaScaleFactor_2DHisto(isyst+1, True  )
+        h2Save_sfErrorAbs.SetMinimum(0)
+        h2Save_sfErrorAbs.SetMaximum(min(h2Save_sfErrorAbs.GetMaximum(),0.2))
+        h2Save_sfErrorRel.SetMinimum(0)
+        h2Save_sfErrorRel.SetMaximum(1)
+        h2Save_sfErrorAbs.SetTitle('e/#gamma absolute SF syst: %s ' % errorNames[isyst])
+        h2Save_sfErrorRel.SetTitle('e/#gamma relative SF syst: %s ' % errorNames[isyst])
+        h2Save_sfErrorAbs.Write('EGamma_Err2D_AbsComp_%s' % errorNames[isyst] ,rt.TObject.kOverwrite)
+        h2Save_sfErrorRel.Write('EGamma_Err2D_RelComp_%s' % errorNames[isyst] ,rt.TObject.kOverwrite)
+
+    rootout.Close()
 
     cDummy.Print( pdfout + "]" )
 

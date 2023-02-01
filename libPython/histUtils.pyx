@@ -98,8 +98,8 @@ def makePassFailHistograms( sample, flag, bindef, var ):
 
         if not sample.weight is None:
             cutBin = '( %s ) * %s ' % (cuts, sample.weight)
-            if sample.maxWeight < 999:
-                cutBin = '( %s ) * (%s < %f ? %s : 1.0 )' % (cuts, sample.weight,sample.maxWeight,sample.weight)
+            if sample.maxWeight > 0:
+                cutBin = '( %s ) * (fabs( %s ) < %f ? %s : 1.0 )' % (cuts, sample.weight,sample.maxWeight,sample.weight)
         else:
             cutBin = '%s' % cuts
 

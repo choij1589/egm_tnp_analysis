@@ -14,6 +14,7 @@ parser.add_argument('--createBins' , action='store_true'  , help = 'create binin
 parser.add_argument('--createHists', action='store_true'  , help = 'create histograms')
 parser.add_argument('--sample'     , default='all'        , help = 'create histograms (per sample, expert only)')
 parser.add_argument('--altSig'     , action='store_true'  , help = 'alternate signal model fit')
+parser.add_argument('--addGaus'    , action='store_true'  , help = 'add gaussian to alternate signal model failing probe')
 parser.add_argument('--altBkg'     , action='store_true'  , help = 'alternate background model fit')
 parser.add_argument('--doFit'      , action='store_true'  , help = 'fit sample (sample should be defined in settings.py)')
 parser.add_argument('--mcSig'      , action='store_true'  , help = 'fit MC nom [to init fit parama]')
@@ -212,6 +213,9 @@ if  args.doFit:
             if args.mcSig :
                 jobbatchname+='_mcSig'
                 arguments+=' --mcSig'
+            if args.addGaus:
+                jobbatchname+='_addGaus'
+                arguments+=' --addGaus'
             if args.altSig:
                 jobbatchname+='_altSig'
                 arguments+=' --altSig'
@@ -250,24 +254,26 @@ queue {5}
         else: 
             subsample=sampleToFit.clone()
             subsample.fitFile=os.path.splitext(subsample.fitFile)[0]+'/bin%d.root'%args.jobIndex
-            if args.altSig:
+            if args.altSig and not args.addGaus:
                 tnpRoot.histFitterAltSig(  subsample, tnpBins['bins'][args.jobIndex], tnpConf.tnpParAltSigFit )
+            elif args.altSig and args.addGaus:
+                tnpRoot.histFitterAltSig(  subsample, tnpBins['bins'][args.jobIndex], tnpConf.tnpParAltSigFit_addGaus, 1)
             elif args.altBkg:
                 tnpRoot.histFitterAltBkg(  subsample, tnpBins['bins'][args.jobIndex], tnpConf.tnpParAltBkgFit )
             else:
                 tnpRoot.histFitterNominal( subsample, tnpBins['bins'][args.jobIndex], tnpConf.tnpParNomFit )
 
     else:
-        if (args.binNumber >= 0 and ib == args.binNumber) or args.binNumber < 0:
-            if args.altSig:                 
-                tnpRoot.histFitterAltSig(  sampleToFit, tnpBins['bins'][ib], tnpConf.tnpParAltSigFit )
-            elif args.altBkg:
-                tnpRoot.histFitterAltBkg(  sampleToFit, tnpBins['bins'][ib], tnpConf.tnpParAltBkgFit )
-            else:
-                tnpRoot.histFitterNominal( sampleToFit, tnpBins['bins'][ib], tnpConf.tnpParNomFit )
-        outfiles=[]
-        for ib in range(len(tnpBins['bins'])): outfiles.append('%s/bin%d.root'%(os.path.splitext(sampleToFit.fitFile)[0],ib))
-        os.system('hadd -f %s %s'%(sampleToFit.fitFile,' '.join(outfiles)))
+        for ib in range(len(tnpBins['bins'])):
+            if (args.binNumber >= 0 and ib == args.binNumber) or args.binNumber < 0:
+                if args.altSig and not args.addGaus:                 
+                    tnpRoot.histFitterAltSig(  sampleToFit, tnpBins['bins'][ib], tnpConf.tnpParAltSigFit )
+                elif args.altSig and args.addGaus:
+                    tnpRoot.histFitterAltSig(  sampleToFit, tnpBins['bins'][ib], tnpConf.tnpParAltSigFit_addGaus, 1)
+                elif args.altBkg:
+                    tnpRoot.histFitterAltBkg(  sampleToFit, tnpBins['bins'][ib], tnpConf.tnpParAltBkgFit )
+                else:
+                    tnpRoot.histFitterNominal( sampleToFit, tnpBins['bins'][ib], tnpConf.tnpParNomFit )
         args.doPlot=True
 
 

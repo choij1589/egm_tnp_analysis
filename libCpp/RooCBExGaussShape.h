@@ -23,7 +23,6 @@ public:
 		    RooAbsReal& _n,
 		    RooAbsReal& _sigma_2,
 		    RooAbsReal& _tailLeft
-
 		    );
 
   RooCBExGaussShape(const RooCBExGaussShape& other, const char* name);
@@ -35,14 +34,13 @@ public:
 
 protected:
 
-  RooRealProxy m ;
+  RooRealProxy  m ;
   RooRealProxy  m0 ;
   RooRealProxy  sigma ;
   RooRealProxy  alpha ;
   RooRealProxy  n ;
   RooRealProxy  sigma_2 ;
-  RooRealProxy tailLeft ;
-    
+  RooRealProxy  tailLeft ;
 };
 
 #endif
