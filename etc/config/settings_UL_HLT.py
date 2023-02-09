@@ -1,8 +1,8 @@
 #############################################################
 ########## General settings
 #############################################################
-Era='2018'
-Type='TrigEle12' #ID/TrigEle23/TrigEle12
+Era=Nom
+Type='TrigEle23' #ID/TrigEle23/TrigEle12
 
 # Tag & General Cuts
 VetoGap      = '(abs(el_sc_eta)<1.444 || abs(el_sc_eta)>1.566)'
@@ -33,9 +33,9 @@ HLTEl12 = 'passHltEle23Ele12CaloIdLTrackIdLIsoVLLeg2'
 flags = {
   'POGMVAni90_'+Era : POGMVAni90,
   'POGCBM_'+Era : POGCBM,
-  'TopHNSST_'+Era : TopHNSST,
-  'Ele23Leg1_TopHNSST_'+Era : HLTEl23,
-  'Ele12Leg2_TopHNSST_'+Era : HLTEl12,
+  'TopHNT_'+Era : TopHNT,
+  'Ele23Leg1_TopHNT_'+Era : HLTEl23,
+  'Ele12Leg2_TopHNT_'+Era : HLTEl12,
 }
 
 baseOutDir = 'results/'
@@ -108,8 +108,8 @@ cutBase = TagCutBase27 if '2016' in Era else TagCutBase32
 additionalCutBase = {}
 if 'Trig' in Type :
   additionalCutBase = {
-    'Ele23Leg1_TopHNSST_'+Era : TopHNSST,
-    'Ele12Leg2_TopHNSST_'+Era : TopHNSST,
+    'Ele23Leg1_TopHNT_'+Era : TopHNT,
+    'Ele12Leg2_TopHNT_'+Era : TopHNT,
   }
 additionalCuts={}
 #if Type=='ID':

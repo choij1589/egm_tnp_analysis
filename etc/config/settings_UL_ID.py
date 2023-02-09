@@ -34,6 +34,7 @@ flags = {
   'POGMVAni90_'+Era : POGMVAni90,
   'POGCBM_'+Era : POGCBM,
   'TopHNSST_'+Era : TopHNSST,
+  'TopHNT_'+Era : TopHNT,
   'Ele23Leg1_TopHNSST_'+Era : HLTEl23,
   'Ele12Leg2_TopHNSST_'+Era : HLTEl12,
 }
@@ -81,7 +82,7 @@ bin_POGID = [
 ]
 bin_ID = [
     { 'var' : 'el_sc_eta' , 'type': 'float', 'bins': [-2.5, -2., -1.479, -0.8, 0.0, 0.8, 1.479, 2., 2.5], 'title':'#eta_{SC}' },
-    { 'var' : 'el_pt' , 'type': 'float', 'bins': [15, 20, 35, 50, 100, 200, 500], 'title':'p_{T} [GeV]' },#v3
+    { 'var' : 'el_pt' , 'type': 'float', 'bins': [10, 20, 35, 50, 100, 200, 500], 'title':'p_{T} [GeV]' },#v3
 ]
 bin_Ele23 = [
     { 'var' : 'el_sc_eta' , 'type': 'float', 'bins': [-2.5, -2., -1.479, -0.8, 0.0, 0.8, 1.479, 2., 2.5], 'title':'#eta_{SC}' },
@@ -108,7 +109,9 @@ cutBase = TagCutBase27 if '2016' in Era else TagCutBase32
 additionalCutBase = {}
 if 'Trig' in Type :
   additionalCutBase = {
+    'Ele23Leg1_TopHNT_'+Era : TopHNT,
     'Ele23Leg1_TopHNSST_'+Era : TopHNSST,
+    'Ele12Leg2_TopHNT_'+Era : TopHNT,
     'Ele12Leg2_TopHNSST_'+Era : TopHNSST,
   }
 additionalCuts={}

@@ -7,6 +7,7 @@ import sys
 import pickle
 import shutil
 from datetime import datetime
+from time import sleep
 
 parser = argparse.ArgumentParser(description='tnp EGM fitter')
 parser.add_argument('--checkBins'  , action='store_true'  , help = 'check  bining definition')
@@ -55,6 +56,8 @@ if not args.flag in tnpConf.flags.keys() :
 outputDirectory = '%s/%s/' % (tnpConf.baseOutDir,args.flag)
 
 print '===>  Output directory: '
+print tnpConf.baseOutDir
+print args.flag
 print outputDirectory
 
 
@@ -248,6 +251,7 @@ queue {5}
 
             outfiles=[]
             for ib in range(len(tnpBins['bins'])): outfiles.append('%s/bin%d.root'%(os.path.splitext(sampleToFit.fitFile)[0],ib))
+            sleep(60)
             os.system('hadd -f %s %s'%(sampleToFit.fitFile,' '.join(outfiles)))
             args.doPlot=True
             
